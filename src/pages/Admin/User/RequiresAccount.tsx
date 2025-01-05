@@ -11,7 +11,7 @@ import moment from 'moment';
 import { loadRole } from '../../../store/role/thunks';
 import { IRole } from '../../../store/role/types';
 
-const User = () => {
+const RequiresAccount = () => {
     const users : IUser[] =  useSelector((state: AppState) => state.users.items);
     const totalItems = useSelector((state: AppState) => state.users.total);
     const pageSize = useSelector((state: AppState) => state.users.pageSize);
@@ -129,8 +129,8 @@ const User = () => {
                 <td>{user.trangThaiDangKy ? 'Đã đăng ký' : 'Chưa đăng ký'}</td>
                 <td>{user.ngayDangKy ? DateFormatted(user.ngayDangKy) : 'N/A'}</td>
                 <td>
-                  <Link to={UrlConstants.USER_EDIT + user.maNguoiDung}>
-                    Sửa
+                  <Link to={UrlConstants.DETAIL_ACCOUNT + user.maNguoiDung}>
+                    xem chi tiết
                   </Link>
                 </td>
             </tr>
@@ -197,9 +197,9 @@ const User = () => {
            {/* DataTales Example */}
             <div className="card shadow mb-4">
                 <div className="card-header py-3">
-                    <h6 className="m-0 font-weight-bold text-primary">Danh sách người dùng</h6>
+                    <h6 className="m-0 font-weight-bold text-primary">Danh sách đăng ký tài khoản chủ phòng</h6>
                 </div>
-                <div className='header-buttons'>
+                {/* <div className='header-buttons'>
                     <button
                     type='button'
                     className='btn btn-link'
@@ -231,7 +231,7 @@ const User = () => {
                       </button>
                     </Fragment>
                   )}
-                </div>
+                </div> */}
 
                 
 
@@ -239,7 +239,7 @@ const User = () => {
                     <div className="table-responsive">
                       
                       {/* Dropdown */}
-                      <div className="dropdown mb-2">
+                      {/* <div className="dropdown mb-2">
                           {selectedDropDownItems === "" ? (
                             <button
                               onClick={toggleDropdown}
@@ -271,7 +271,7 @@ const User = () => {
                               {dropdownElements}
                             </div>
                           )}
-                        </div>
+                        </div> */}
                         <table className="table table-bordered" id="dataTable" width="100%" cellSpacing={0}>
                             <thead>
                                 <tr>
@@ -319,4 +319,4 @@ const User = () => {
     )
 }
 
-export default User
+export default RequiresAccount

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, AppState } from '../../store';
 import { loginUser } from '../../store/account/thunks';
 import { useLocation, useNavigate  } from 'react-router';
+import backgroundImage from '../../assets/image/logoRoomFinder.png';
 export const Login = () => {
     const [email, setEmail] = useState('');
     const [matKhau, setMatKhau] = useState(''); 
@@ -57,12 +58,14 @@ export const Login = () => {
                     <div className="card o-hidden border-0 shadow-lg my-5">
                         <div className="card-body p-0">
                             {/* Nested Row within Card Body */}
-                            <div className="row">
-                                <div className="col-lg-6 d-none d-lg-block bg-login-image" />
-                                <div className="col-lg-6">
+                            <div className="row d-flex"> {/* Thêm d-flex vào row */}
+                                <div className="col-lg-6 d-none d-lg-block ">
+                                    <img src={backgroundImage} alt="Background" style={{width:"100%", height:"100%", objectFit: "cover"}}/>
+                                </div>
+                                <div className="col-lg-6 d-flex flex-column justify-content-center align-items-center">
                                     <div className="p-5">
                                         <div className="text-center">
-                                            <h1 className="h4 text-gray-900 mb-4">Welcome Back!</h1>
+                                            <h1 className="h4 text-gray-900 mb-4">Chào mừng bạn trở lại!</h1>
                                         </div>
                                         <form className="user" onSubmit={handleSubmit}>
                                             <div className="form-group">
@@ -87,32 +90,27 @@ export const Login = () => {
                                                     </div>
                                                 ) }
                                             </div>
-                                            <div className="form-group">
+                                            {/* <div className="form-group">
                                                 <div className="custom-control custom-checkbox small">
                                                     <input type="checkbox" className="custom-control-input" id="customCheck" />
-                                                    <label className="custom-control-label" htmlFor="customCheck">Remember
-                                                        Me</label>
+                                                    <label className="custom-control-label" htmlFor="customCheck">Lưu </label>
                                                 </div>
-                                            </div>
-                                            <div className='form-group'>
+                                            </div> */}
+                                            <div className="form-group d-flex justify-content-center"> {/* Thêm d-flex và justify-content-center */}
                                                 {loading && (
                                                     <span className='spinner-border spinner-border-sm mr-1'></span>
                                                 )}
                                                 <button className="btn btn-primary">
-                                                    Login
+                                                    Đăng nhập
                                                 </button>
                                             </div>
-                                            
-                                            <hr />
                                            
                                         </form>
                                         <hr />
                                         <div className="text-center">
-                                            <a className="small" href="forgot-password.html">Forgot Password?</a>
+                                            <a className="small" href="forgot-password.html">Quên mật khẩu?</a>
                                         </div>
-                                        <div className="text-center">
-                                            <a className="small" href="register.html">Create an Account!</a>
-                                        </div>
+                                        
                                     </div>
                                 </div>
                             </div>

@@ -30,6 +30,7 @@ import { setAuthToken } from '../helpers';
 import  userReducer  from './users/reducers';
 import ruleReducer from './role/reducers';
 import  alertReducer  from './alert/reducers';
+import roomReducer from './rooms/reducers';
 // Cấu hình persist
 const persistConfig = {
   key: 'root',
@@ -43,6 +44,7 @@ const rootReducer = combineReducers({
   users: userReducer,
   alert: alertReducer,
   role: ruleReducer,
+  room: roomReducer
 });
 
 // Áp dụng persistReducer lên rootReducer

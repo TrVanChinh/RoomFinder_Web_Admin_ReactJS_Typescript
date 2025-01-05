@@ -515,7 +515,7 @@ const EditUser = () => {
 
   return (
     <Fragment>
-      <h1 className="h3 mb-4 text-gray-800">Cập nhật user</h1>
+      <h1 className="h3 mb-4 text-gray-800">Cập nhật người dùng</h1>
       <div className="card">
         <div className="card-header">Thông tin user</div>
         <div className="card-body">

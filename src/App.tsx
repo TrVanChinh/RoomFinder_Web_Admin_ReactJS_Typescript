@@ -12,6 +12,9 @@ import Home from './pages/Admin/Home/Home';
 import User from './pages/Admin/User/User';
 import  AddUser  from './pages/Admin/User/AddUser';
 import EditUser from './pages/Admin/User/EditUser';
+import RequiresAccount from './pages/Admin/User/RequiresAccount';
+import DetailAccount from './pages/Admin/User/DetailAccount';
+import Room from './pages/Admin/Room/Room';
 
 function App() {
  
@@ -26,6 +29,9 @@ function App() {
               <Route path="user" element={<User />} />
               <Route path="user-add" element={<AddUser />} />
               <Route path="user-edit/:id" element={<EditUser />} />
+              <Route path="requires-account" element={<RequiresAccount />} />
+              <Route path="detail-account/:id" element={<DetailAccount />} />
+              <Route path="rooms" element={<Room />} />
 
             </Route>
           </Route>

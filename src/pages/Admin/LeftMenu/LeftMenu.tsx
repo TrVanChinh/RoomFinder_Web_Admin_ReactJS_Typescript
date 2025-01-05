@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom'
 const LeftMenu = () => {
     const [isToggled, setToggled] = useState(false)
     const [isComponentShow, setIsComponentShow] = useState(false)
+    const [isRoomComponentShow, setIsRoomComponentShow] = useState(false)
+
 
   return (
     <ul className={'navbar-nav bg-gradient-primary sidebar sidebar-dark accordion' + (isToggled ? ' toggled' : '')}
@@ -16,7 +18,7 @@ const LeftMenu = () => {
       <div className="sidebar-brand-icon rotate-n-15">
         <i className="fas fa-laugh-wink" />
       </div>
-      <div className="sidebar-brand-text mx-3"> Admin <sup>Social</sup></div>
+      <div className="sidebar-brand-text mx-3"> Admin</div>
     </Link>
     {/* Divider */}
     <hr className="sidebar-divider my-0" />
@@ -24,7 +26,7 @@ const LeftMenu = () => {
     <li className="nav-item active">
       <a className="nav-link" href="index.html">
         <i className="fas fa-fw fa-tachometer-alt" />
-        <span>Dashboard</span></a>
+        <span>Trang chủ</span></a>
     </li>
     {/* Divider */}
     <hr className="sidebar-divider" />
@@ -43,21 +45,40 @@ const LeftMenu = () => {
         onClick = {() => setIsComponentShow(!isComponentShow)}
         >
         <i className="fas fa-fw fa-cog" />
-        <span>Hệ thống</span>
+        <span>Quản lý người dùng</span>
       </a>
       <div id="collapseTwo" className={'collapse' + (isComponentShow ? ' show':'')} aria-labelledby="headingTwo" data-parent="#accordionSidebar">
         <div className="bg-white py-2 collapse-inner rounded">
-          <h6 className="collapse-header">Custom Components:</h6>
           <Link className="collapse-item" to='/user'>Người dùng</Link>
-          <a className="collapse-item" href="cards.html">Cards</a>
+          <Link className="collapse-item" to='/requires-account'>Yêu cầu đăng ký tài khoản</Link>
+        </div>
+      </div>
+    </li>
+
+    <li className="nav-item">
+      <a 
+        className={'nav-link' + (isRoomComponentShow ? '':' collapsed')}
+        href="/#" data-toggle="collapse" 
+        data-target="#collapseTwo" 
+        aria-expanded={isRoomComponentShow ? 'true' : 'false'}
+        aria-controls="collapseTwo"
+        onClick = {() => setIsRoomComponentShow(!isRoomComponentShow)}
+        >
+        <i className="fas fa-fw fa-cog" />
+        <span>Quản lý phòng</span>
+      </a>
+      <div id="collapseTwo" className={'collapse' + (isRoomComponentShow ? ' show':'')} aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div className="bg-white py-2 collapse-inner rounded">
+          <Link className="collapse-item" to='/rooms'>Danh sách phòng</Link>
+          <Link className="collapse-item" to='/room/reporter'>Phòng bị báo cáo</Link>
         </div>
       </div>
     </li>
     {/* Nav Item - Utilities Collapse Menu */}
-    <li className="nav-item">
+    {/* <li className="nav-item">
       <a className="nav-link collapsed" href="/#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
         <i className="fas fa-fw fa-wrench" />
-        <span>Utilities</span>
+        <span>Quản lý phòng</span>
       </a>
       <div id="collapseUtilities" className="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
         <div className="bg-white py-2 collapse-inner rounded">
@@ -68,15 +89,15 @@ const LeftMenu = () => {
           <a className="collapse-item" href="utilities-other.html">Other</a>
         </div>
       </div>
-    </li>
+    </li> */}
     {/* Divider */}
     <hr className="sidebar-divider" />
     {/* Heading */}
-    <div className="sidebar-heading">
+    {/* <div className="sidebar-heading">
       Addons
-    </div>
+    </div> */}
     {/* Nav Item - Pages Collapse Menu */}
-    <li className="nav-item">
+    {/* <li className="nav-item">
       <a className="nav-link collapsed" href="/#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
         <i className="fas fa-fw fa-folder" />
         <span>Pages</span>
@@ -93,19 +114,19 @@ const LeftMenu = () => {
           <a className="collapse-item" href="blank.html">Blank Page</a>
         </div>
       </div>
-    </li>
+    </li> */}
     {/* Nav Item - Charts */}
-    <li className="nav-item">
+    {/* <li className="nav-item">
       <a className="nav-link" href="charts.html">
         <i className="fas fa-fw fa-chart-area" />
         <span>Charts</span></a>
-    </li>
+    </li> */}
     {/* Nav Item - Tables */}
-    <li className="nav-item">
+    {/* <li className="nav-item">
       <a className="nav-link" href="tables.html">
         <i className="fas fa-fw fa-table" />
         <span>Tables</span></a>
-    </li>
+    </li> */}
     {/* Divider */}
     <hr className="sidebar-divider d-none d-md-block" />
     {/* Sidebar Toggler (Sidebar) */}

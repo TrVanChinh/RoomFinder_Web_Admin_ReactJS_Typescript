@@ -10,11 +10,13 @@ import swal from 'sweetalert'
 import moment from 'moment';
 import { loadRole } from '../../../store/role/thunks';
 import { IRole } from '../../../store/role/types';
+import { RoomInfo } from '../../../store/rooms/types';
+import { loadRoomsPagingByType, loadRoomsPaging } from '../../../store/rooms/thunks';
 
 const User = () => {
-    const users : IUser[] =  useSelector((state: AppState) => state.users.items);
-    const totalItems = useSelector((state: AppState) => state.users.total);
-    const pageSize = useSelector((state: AppState) => state.users.pageSize);
+    const rooms : RoomInfo[] =  useSelector((state: AppState) => state.room.items);
+    const totalItems = useSelector((state: AppState) => state.room.total);
+    const pageSize = useSelector((state: AppState) => state.room.pageSize);
     const role: IRole[] = useSelector((state: AppState) => state.role.items)
 
     const [currentPage, setCurrentPage] = useState(1)
@@ -22,7 +24,6 @@ const User = () => {
     const [showSearch, setShowSearch] = useState(false)
     const [selectedItems, setSelectedItems] = useState<number[]>([])
 
-    
     const [selectedDropDownItems, setSelectedDropDownItems] = useState<string>("")
     const [dropDownIndexItem, setDropDownIndexItem] = useState<number>(0)
 
@@ -35,14 +36,13 @@ const User = () => {
     const dispatch = useDispatch<AppDispatch>();
     useEffect(() => {
         dispatch(loadRole())
-        // dispatch(loadUsersPaging({ keyword: searchKeyword, currentPage: currentPage } ))
-        dispatch(loadUsersPagingByRole({ keyword: dropDownIndexItem, currentPage: currentPage } ))
+        dispatch(loadRoomsPaging({ keyword: '',  currentPage: 1 }))
+        // dispatch(loadRoomsPagingByType({ keyword: dropDownIndexItem, currentPage: currentPage } ))
     },[dispatch, currentPage, searchKeyword, dropDownIndexItem])
 
 
     const onPageChanged = (pageNumber: number) => {
         setCurrentPage(pageNumber);
-        // dispatch(loadUsersPagingByRole({ keyword: dropDownIndexItem, currentPage: pageNumber }));
     };
 
     const handleKeywordPress = (e: ChangeEvent<HTMLInputElement>) => {
@@ -51,7 +51,7 @@ const User = () => {
 
     const resetKeyword = () => {
         setSearchKeyword('');
-        dispatch(loadUsersPaging({ keyword: '',  currentPage: 1 }))
+        dispatch(loadRoomsPaging({ keyword: '',  currentPage: 1 }))
         };
 
     const DateFormatted = (ngay: Date) => {
@@ -105,31 +105,31 @@ const User = () => {
     ));
         
 
-    const userElements: JSX.Element[] = users.map((user) => {
+    const roomElements: JSX.Element[] = rooms.map((room) => {
         return (
-            <tr key={`user_${user.maNguoiDung}`}
+            <tr key={`room_${room.maPhong}`}
             className={`table-row ${
-              selectedItems.indexOf(user.maNguoiDung) !== -1 ? 'selected' : ''
+              selectedItems.indexOf(room.maPhong) !== -1 ? 'selected' : ''
             }`}
-                onClick={() => handleSelectRow(user.maNguoiDung)}
+                onClick={() => handleSelectRow(room.maPhong)}
             >
                 <td>
                   <input
                     type='checkbox'
-                    value={`${user.maNguoiDung}`}
-                    onChange={() => handleSelectRow(user.maNguoiDung)}
-                    checked={selectedItems.indexOf(user.maNguoiDung) !== -1}
+                    value={`${room.maPhong}`}
+                    onChange={() => handleSelectRow(room.maPhong)}
+                    checked={selectedItems.indexOf(room.maPhong) !== -1}
                   />
                 </td>
-                <td>{user.tenNguoiDung}</td>
-                <td>{user.email}</td>
-                <td>{user.ngaySinh ? DateFormatted(user.ngaySinh): 'N/A'}</td>
-                <td>{user.sdt}</td>
-                <td>{user.soCCCD}</td>
-                <td>{user.trangThaiDangKy ? 'Đã đăng ký' : 'Chưa đăng ký'}</td>
-                <td>{user.ngayDangKy ? DateFormatted(user.ngayDangKy) : 'N/A'}</td>
+                <td>{room.nguoiDung?.tenNguoiDung}</td>
+                <td>{room.tieuDe}</td>
+                <td>{room.loaiPhong.loaiPhong}</td>
+                <td>{room.dienTich}</td>
+                <td>{room.giaPhong}</td>
+                <td>{room.trangThaiPhong}</td>
+                {/* <td>{room. ? DateFormatted(user.ngayDangKy) : 'N/A'}</td> */}
                 <td>
-                  <Link to={UrlConstants.USER_EDIT + user.maNguoiDung}>
+                  <Link to={UrlConstants.ROOM_EDIT + room.maPhong}>
                     Sửa
                   </Link>
                 </td>
@@ -197,7 +197,7 @@ const User = () => {
            {/* DataTales Example */}
             <div className="card shadow mb-4">
                 <div className="card-header py-3">
-                    <h6 className="m-0 font-weight-bold text-primary">Danh sách người dùng</h6>
+                    <h6 className="m-0 font-weight-bold text-primary">Danh sách phòng</h6>
                 </div>
                 <div className='header-buttons'>
                     <button
@@ -245,7 +245,7 @@ const User = () => {
                               onClick={toggleDropdown}
                               className="btn btn-primary dropdown-toggle"
                             >
-                              Loại tài khoản
+                              Loại phòng
                             </button>
                           ) : (
                             <button
@@ -276,19 +276,18 @@ const User = () => {
                             <thead>
                                 <tr>
                                     <th></th>
-                                    <th>Tên</th>
-                                    <th>Email</th>
-                                    <th>Ngày sinh</th>
-                                    <th>SĐT</th>
-                                    <th>Số CCCD</th>
-                                    <th>Trạng thái tài khoản</th>
-                                    <th>Ngày đăng ký</th>
+                                    <th>Tên chủ phòng</th>
+                                    <th>tiêu đề phòng</th>
+                                    <th>Loại phòng</th>
+                                    <th>Diện tích (m2)</th>
+                                    <th>Giá phòng (vnđ)</th>
+                                    <th>Trạng thái phòng</th>
                                     <th></th>
                                 </tr>
                             </thead>
                            
                             <tbody>
-                                {userElements}
+                                {roomElements}
                                 
                             </tbody>
                         </table>
