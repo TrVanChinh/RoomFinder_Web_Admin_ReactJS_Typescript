@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, AppState } from '../../../store';
 import { IUser} from '../../../store/users/types'
-import { deleteUsers, loadUsersPaging, loadUsersPagingByRole } from '../../../store/users/thunks';
+import { deleteUsers, loadRegisterOwnerPaging, loadUsersPaging, loadUsersPagingByRole } from '../../../store/users/thunks';
 import { Pagination } from '../../../components';
 import { UrlConstants } from '../../../constans';
 import swal from 'sweetalert'
@@ -22,10 +22,6 @@ const RequiresAccount = () => {
     const [showSearch, setShowSearch] = useState(false)
     const [selectedItems, setSelectedItems] = useState<number[]>([])
 
-    
-    const [selectedDropDownItems, setSelectedDropDownItems] = useState<string>("")
-    const [dropDownIndexItem, setDropDownIndexItem] = useState<number>(0)
-
     const [isOpen, setIsOpen] = useState(false);
 
     const toggleDropdown = () => {
@@ -36,8 +32,8 @@ const RequiresAccount = () => {
     useEffect(() => {
         dispatch(loadRole())
         // dispatch(loadUsersPaging({ keyword: searchKeyword, currentPage: currentPage } ))
-        dispatch(loadUsersPagingByRole({ keyword: dropDownIndexItem, currentPage: currentPage } ))
-    },[dispatch, currentPage, searchKeyword, dropDownIndexItem])
+        dispatch(loadRegisterOwnerPaging(currentPage))
+    },[dispatch, currentPage, searchKeyword])
 
 
     const onPageChanged = (pageNumber: number) => {
@@ -85,26 +81,7 @@ const RequiresAccount = () => {
             });
           }
         };
-
-        const handleDropdownClick = (maLTK: number, vaiTro: string) => {
-          setSelectedDropDownItems(vaiTro);
-          setDropDownIndexItem(maLTK);
-          toggleDropdown();
-        };
-
-    const dropdownElements: JSX.Element[] = role.map((item) => (
-      <button
-        key={item.maLTK}
-        className="dropdown-item"
-        onClick={() => {
-          handleDropdownClick(Number(item.maLTK), item.vaiTro);
-        }}
-      >
-        {item.vaiTro}
-      </button>
-    ));
         
-
     const userElements: JSX.Element[] = users.map((user) => {
         return (
             <tr key={`user_${user.maNguoiDung}`}
@@ -126,7 +103,6 @@ const RequiresAccount = () => {
                 <td>{user.ngaySinh ? DateFormatted(user.ngaySinh): 'N/A'}</td>
                 <td>{user.sdt}</td>
                 <td>{user.soCCCD}</td>
-                <td>{user.trangThaiDangKy ? 'Đã đăng ký' : 'Chưa đăng ký'}</td>
                 <td>{user.ngayDangKy ? DateFormatted(user.ngayDangKy) : 'N/A'}</td>
                 <td>
                   <Link to={UrlConstants.DETAIL_ACCOUNT + user.maNguoiDung}>
@@ -281,7 +257,6 @@ const RequiresAccount = () => {
                                     <th>Ngày sinh</th>
                                     <th>SĐT</th>
                                     <th>Số CCCD</th>
-                                    <th>Trạng thái tài khoản</th>
                                     <th>Ngày đăng ký</th>
                                     <th></th>
                                 </tr>

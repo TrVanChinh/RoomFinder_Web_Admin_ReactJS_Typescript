@@ -30,12 +30,14 @@ const AddUser = () => {
     sdt: '',
     trangThaiTaiKhoan: '',
     trangThaiDangKy: '',
+    matTruocCCCD: '',
+    matSauCCCD: '',
     maLTK: 0,
   });
 
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  const { email, tenNguoiDung, matKhau, gioiTinh, ngaySinh, soCCCD, sdt, trangThaiTaiKhoan, trangThaiDangKy, maLTK } = formInputs;
+  const { email, tenNguoiDung, matKhau, gioiTinh, ngaySinh, soCCCD, sdt, matTruocCCCD, matSauCCCD, trangThaiTaiKhoan, trangThaiDangKy, maLTK } = formInputs;
 
   useEffect(() => {
     if (id) {
@@ -68,6 +70,8 @@ const AddUser = () => {
         ngaySinh: ngaySinh,
         soCCCD: soCCCD,
         sdt: sdt,
+        matTruocCCCD: "",
+        matSauCCCD:"",
         trangThaiTaiKhoan: trangThaiTaiKhoan,
         trangThaiDangKy: trangThaiDangKy,
         maLTK: maLTK,

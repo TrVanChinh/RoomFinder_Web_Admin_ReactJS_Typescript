@@ -3,7 +3,7 @@ import React, { ChangeEvent, FormEvent, Fragment, useEffect, useState } from 're
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, AppState } from '../../../store';
 import { IRole } from '../../../store/role/types';
-import { getUserById, updateUser } from '../../../store/users/thunks';
+import { getUserById, ApproveTheRoomOwner, RejectTheRoomOwner } from '../../../store/users/thunks';
 import { validateEmail } from '../../../helpers';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
@@ -28,6 +28,8 @@ const DetailAccount = () => {
     ngaySinh: '',
     soCCCD: '',
     sdt: '',
+    matTruocCCCD: '',
+    matSauCCCD: '',
     trangThaiTaiKhoan: '',
     trangThaiDangKy: '',
     maLTK: 0,
@@ -35,7 +37,7 @@ const DetailAccount = () => {
 
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  const { email, tenNguoiDung, matKhau, gioiTinh, ngaySinh, soCCCD, sdt, trangThaiTaiKhoan, trangThaiDangKy, maLTK } = formInputs;
+  const { email, tenNguoiDung, matKhau, gioiTinh, ngaySinh, soCCCD, sdt, matTruocCCCD, matSauCCCD, trangThaiTaiKhoan, trangThaiDangKy, maLTK } = formInputs;
 
   useEffect(() => {
     if (id) {
@@ -54,6 +56,8 @@ const DetailAccount = () => {
         ngaySinh: formattedNgaySinh,
         soCCCD: user.soCCCD || '',
         sdt: user.sdt || '',
+        matTruocCCCD: user.matTruocCCCD || '',
+        matSauCCCD: user.matSauCCCD || '',
         trangThaiTaiKhoan: user.trangThaiTaiKhoan || '',
         trangThaiDangKy: user.trangThaiDangKy || '',
         maLTK: user.maLTK || 0,
@@ -74,17 +78,32 @@ const DetailAccount = () => {
     setFormInputs((prev) => ({ ...prev, ngaySinh: date ? date.toISOString().split('T')[0] : '' }));
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setFormSubmitted(true);
-
+  const handleSubmit = async () => {
     if (id) {
-      const resultAction = await dispatch(updateUser({ id, user: formInputs }));
+      const resultAction = await dispatch(ApproveTheRoomOwner(id));
 
-      if (updateUser.fulfilled.match(resultAction)) {
-        navigate(UrlConstants.USERS_LIST);
+      if (ApproveTheRoomOwner.fulfilled.match(resultAction)) {
+        navigate(UrlConstants.REQUIRES_ACCOUNT);
       } else {
         console.error('Failed to update user:', resultAction.payload);
+      }
+    }
+  };
+
+  const handleReject = async () => {
+    if (id) {
+      try {
+        const resultAction = await dispatch(RejectTheRoomOwner(id));
+        if (RejectTheRoomOwner.fulfilled.match(resultAction)) {
+          // alert('Không duyệt tài khoản.');
+          navigate(UrlConstants.REQUIRES_ACCOUNT);
+        } else {
+          console.error('Failed to reject user:', resultAction.payload);
+          // alert('Failed to reject user.');
+        }
+      } catch (error) {
+        console.error('Error rejecting user:', error);
+        alert('An error occurred while rejecting the user.');
       }
     }
   };
@@ -216,15 +235,16 @@ const DetailAccount = () => {
             </div> */}
 
             {/* Hình căn cước */}
-            <div className='row ml-1'> 
+            { matTruocCCCD && matSauCCCD ? (
+                <div className='row ml-1'> 
                 <div className="form-group">
                     <label>Hình mặt trước căn cước</label>
                     <div>
                         <img
-                            src="https://img.pikbest.com/templates/20240623/happy-new-year-2025-2c-at-ty_10634366.jpg!w700wp"
+                            src= {matTruocCCCD}
                             // alt={`Avatar of ${user.tenNguoiDung}`}
                             alt=""
-                            style={{ width: '300px', height: '300px' }}
+                            style={{ width: '400px', height: '300px' }}
                         />
                     </div>
               </div>
@@ -233,24 +253,36 @@ const DetailAccount = () => {
                     <label>Hình mặt sau căn cước</label>
                     <div>
                         <img
-                            src="https://img.pikbest.com/templates/20240623/happy-new-year-2025-2c-at-ty_10634366.jpg!w700wp"
+                            src={matSauCCCD}
                             // alt={`Avatar of ${user.tenNguoiDung}`}
                             alt=""
-                            style={{ width: '300px', height: '300px' }}
+                            style={{ width: '400px', height: '300px' }}
                         />
                     </div>
               </div>
             </div>
+            ) : (
+              <div className="form-group ml-4">
+                <label>Không có hình ảnh căn cước</label>
+              </div>
+            )}
+
+          
             
 
 
-            <button className="btn btn-primary mr-3" type="submit" disabled={loading}>
+            <button className="btn btn-primary mr-3" type="button" disabled={loading} onClick={handleSubmit}>
               {loading && <span className="spinner-border spinner-border-sm mr-1"></span>}
               Duyệt
             </button>
-            <Link className="btn btn-danger" to={UrlConstants.USERS_LIST}>
+
+            <button className="btn btn-danger mr-3" type="button" disabled={loading} onClick={handleReject}>
+              {loading && <span className="spinner-border spinner-border-sm mr-1"></span>}
               Từ chối
-            </Link>
+            </button>
+            {/* <Link className="btn btn-danger" to={UrlConstants.USERS_LIST}>
+              Từ chối
+            </Link> */}
           </form>
         </div>
       </div>

@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, AppState } from '../../../store';
 import { Link } from 'react-router-dom'
+import { AuthenticatedUser } from '../../../store/account/types';
 
 const LeftMenu = () => {
     const [isToggled, setToggled] = useState(false)
     const [isComponentShow, setIsComponentShow] = useState(false)
     const [isRoomComponentShow, setIsRoomComponentShow] = useState(false)
-
+    const user = useSelector((state: AppState) => state.account.user) as AuthenticatedUser;
 
   return (
     <ul className={'navbar-nav bg-gradient-primary sidebar sidebar-dark accordion' + (isToggled ? ' toggled' : '')}
@@ -18,7 +21,11 @@ const LeftMenu = () => {
       <div className="sidebar-brand-icon rotate-n-15">
         <i className="fas fa-laugh-wink" />
       </div>
-      <div className="sidebar-brand-text mx-3"> Admin</div>
+      {user && user.maLTK === 1 ? (
+        <div className="sidebar-brand-text mx-3"> Admin</div>
+      ) : (
+        <div className="sidebar-brand-text mx-3"> Cộng tác viên</div>
+      )}
     </Link>
     {/* Divider */}
     <hr className="sidebar-divider my-0" />
@@ -31,14 +38,12 @@ const LeftMenu = () => {
     {/* Divider */}
     <hr className="sidebar-divider" />
     {/* Heading */}
-    <div className="sidebar-heading">
-      Interface
-    </div>
+
     {/* Nav Item - Pages Collapse Menu */}
     <li className="nav-item">
       <a 
         className={'nav-link' + (isComponentShow ? '':' collapsed')}
-        href="/#" data-toggle="collapse" 
+        data-toggle="collapse" 
         data-target="#collapseTwo" 
         aria-expanded={isComponentShow ? 'true' : 'false'}
         aria-controls="collapseTwo"
@@ -48,17 +53,25 @@ const LeftMenu = () => {
         <span>Quản lý người dùng</span>
       </a>
       <div id="collapseTwo" className={'collapse' + (isComponentShow ? ' show':'')} aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-        <div className="bg-white py-2 collapse-inner rounded">
+        
+      {user && user.maLTK === 1 ? (
+          <div className="bg-white py-2 collapse-inner rounded">
           <Link className="collapse-item" to='/user'>Người dùng</Link>
           <Link className="collapse-item" to='/requires-account'>Yêu cầu đăng ký tài khoản</Link>
         </div>
+        ) : (
+          <div className="bg-white py-2 collapse-inner rounded">
+          <Link className="collapse-item" to='/requires-account'>Yêu cầu đăng ký tài khoản</Link>
+        </div>
+        )}
+       
       </div>
     </li>
 
     <li className="nav-item">
       <a 
         className={'nav-link' + (isRoomComponentShow ? '':' collapsed')}
-        href="/#" data-toggle="collapse" 
+        data-toggle="collapse" 
         data-target="#collapseTwo" 
         aria-expanded={isRoomComponentShow ? 'true' : 'false'}
         aria-controls="collapseTwo"
@@ -70,7 +83,7 @@ const LeftMenu = () => {
       <div id="collapseTwo" className={'collapse' + (isRoomComponentShow ? ' show':'')} aria-labelledby="headingTwo" data-parent="#accordionSidebar">
         <div className="bg-white py-2 collapse-inner rounded">
           <Link className="collapse-item" to='/rooms'>Danh sách phòng</Link>
-          <Link className="collapse-item" to='/room/reporter'>Phòng bị báo cáo</Link>
+          <Link className="collapse-item" to='/report-room'>Phòng bị báo cáo</Link>
         </div>
       </div>
     </li>

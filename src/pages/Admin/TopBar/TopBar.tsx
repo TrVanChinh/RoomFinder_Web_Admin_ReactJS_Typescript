@@ -157,7 +157,12 @@ const TopBar = () => {
       <div className="topbar-divider d-none d-sm-block" />
       {/* Nav Item - User Information */}
       <li className={'nav-item dropdown no-arrow' + (isShowProfileDropdown ? ' show' : '')}>
-        <a className="nav-link dropdown-toggle" onClick={() =>setIsShowProfileDropdown(!isShowProfileDropdown)} href="/#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded={isShowProfileDropdown ? 'true' : 'false'}>
+        <a className="nav-link dropdown-toggle" 
+         onClick={(e) => {
+          e.preventDefault(); 
+          setIsShowProfileDropdown(!isShowProfileDropdown);
+        }}
+          href="/" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded={isShowProfileDropdown ? 'true' : 'false'}>
           <span className="mr-2 d-none d-lg-inline text-gray-600 small">{user?.tenNguoiDung}</span>
           <img className="img-profile rounded-circle" src={user?.hinhDaiDien || avatar} />
         </a>
@@ -167,22 +172,19 @@ const TopBar = () => {
             aria-labelledby="userDropdown">
           <a className="dropdown-item" href="/#">
             <i className="fas fa-user fa-sm fa-fw mr-2 text-gray-400" />
-            Profile
+            Hồ sơ
           </a>
           <a className="dropdown-item" href="/#">
             <i className="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400" />
-            Settings
+            Cài đặt 
           </a>
-          <a className="dropdown-item" href="/#">
-            <i className="fas fa-list fa-sm fa-fw mr-2 text-gray-400" />
-            Activity Log
-          </a>
+
           <div className="dropdown-divider" />
           <a className="dropdown-item" href="/#" data-toggle="modal" data-target="#logoutModal"
             onClick={() =>  dispatch(logoutUser())}
           >
             <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400" />
-            Logout
+            Đăng xuất
           </a>
         </div>
       </li>

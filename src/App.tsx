@@ -15,6 +15,8 @@ import EditUser from './pages/Admin/User/EditUser';
 import RequiresAccount from './pages/Admin/User/RequiresAccount';
 import DetailAccount from './pages/Admin/User/DetailAccount';
 import Room from './pages/Admin/Room/Room';
+import RoomDetail from './pages/Admin/Room/RoomDetail';
+import ReportRoom from './pages/Admin/Room/ReportRoom';
 
 function App() {
  
@@ -32,7 +34,8 @@ function App() {
               <Route path="requires-account" element={<RequiresAccount />} />
               <Route path="detail-account/:id" element={<DetailAccount />} />
               <Route path="rooms" element={<Room />} />
-
+              <Route path="room-detail/:id" element={<RoomDetail />} />
+              <Route path="report-room" element={<ReportRoom />} />
             </Route>
           </Route>
 

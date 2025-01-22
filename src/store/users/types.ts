@@ -20,13 +20,15 @@ export interface IUser {
     hinhDaiDien: string | null;
     ngaySinh: Date | null;
     soCCCD: string | null;
-    maPX: number | null;
+    matTruocCCCD: string | null;
+    matSauCCCD: string | null;
     maLTK: number | null;
     trangThaiTaiKhoan: string | null;
     trangThaiDangKy: string | null;
     ngayDangKy: Date;
     ngayCapNhat: Date | null;
 }
+
 
 export interface IAddUserRequest {
     first_name: string,
@@ -55,9 +57,10 @@ export interface IUserUpdatebyAdminRequest {
     sdt: string | null,
     gioiTinh: string | null,
     soCCCD: string | null,
+    matTruocCCCD: string | null;
+    matSauCCCD: string | null;
     trangThaiTaiKhoan: string,
     trangThaiDangKy: string | null,
- 
 }
 
 // IUpdateUserRequest

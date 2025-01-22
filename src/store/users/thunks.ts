@@ -43,6 +43,28 @@ export const loadUsersPaging = createAsyncThunk(
     }
   )
 
+  export const loadRegisterOwnerPaging = createAsyncThunk( 
+    'user/loadRegisterOwnerPaging',
+    async ( currentPage: number , thunkAPI) => {
+      thunkAPI.dispatch(loginUsersPagingRequest());
+      try {
+        const response = await userService.getRegisterRoomOwnerPaging(currentPage)
+        thunkAPI.dispatch(loginUsersPagingSuccess(response));
+      } catch (error) {
+        let errorMessage = 'An unknown error occurred';
+        if (error instanceof Error) {
+          errorMessage = error.message;
+        } else if (typeof error === 'string') {
+          errorMessage = error;
+        }
+        
+        // Dispatch loginFailure action
+        thunkAPI.dispatch(loginUsersPagingFailure({ error: errorMessage }));
+        return thunkAPI.rejectWithValue(errorMessage);
+      }
+    }
+  )
+
   export const loadUsersPagingByRole = createAsyncThunk( 
     'user/loadUsersPagingByRole',
     async ( { keyword, currentPage }: { keyword: number; currentPage: number } , thunkAPI) => {
@@ -125,6 +147,73 @@ export const loadUsersPaging = createAsyncThunk(
       }, 3000);
     
   });
+
+  export const ApproveTheRoomOwner = createAsyncThunk(
+    'user/ApproveTheRoomOwner',
+    async (id: string, thunkAPI) => {
+     
+      try {
+        thunkAPI.dispatch(updateUserRequest());
+  
+        await userService.ApproveTheRoomOwner(id);
+  
+        thunkAPI.dispatch(updateUserSuccess());
+  
+        thunkAPI.dispatch(alertSuccess({message: 'Duyệt tài khoản thành công'}));
+  
+        // history.push(UrlConstants.USERS_LIST);
+      } catch (error) {
+        let errorMessage = 'An unknown error occurred';
+        if (error instanceof Error) {
+          errorMessage = error.message;
+        } else if (typeof error === 'string') {
+          errorMessage = error;
+        }
+        
+        // Dispatch loginFailure action
+        thunkAPI.dispatch(updateUserFailure({ error: errorMessage }));
+        thunkAPI.dispatch(alertError({ message: 'Duyệt tài khoản thất bại.' }))
+        return thunkAPI.rejectWithValue(errorMessage);
+      }
+      setTimeout(() => {
+        thunkAPI.dispatch(clearAlert());
+      }, 3000);
+    
+  });
+
+  export const RejectTheRoomOwner = createAsyncThunk(
+    'user/RejectTheRoomOwner',
+    async (id: string, thunkAPI) => {
+     
+      try {
+        thunkAPI.dispatch(updateUserRequest());
+  
+        await userService.RejectTheRoomOwner(id);
+  
+        thunkAPI.dispatch(updateUserSuccess());
+  
+        thunkAPI.dispatch(alertSuccess({message: 'Phê duyệt tài khoản thành công'}));
+  
+        // history.push(UrlConstants.USERS_LIST);
+      } catch (error) {
+        let errorMessage = 'An unknown error occurred';
+        if (error instanceof Error) {
+          errorMessage = error.message;
+        } else if (typeof error === 'string') {
+          errorMessage = error;
+        }
+        
+        // Dispatch loginFailure action
+        thunkAPI.dispatch(updateUserFailure({ error: errorMessage }));
+        thunkAPI.dispatch(alertError({ message: 'Phê duyệt tài khoản thất bại.' }))
+        return thunkAPI.rejectWithValue(errorMessage);
+      }
+      setTimeout(() => {
+        thunkAPI.dispatch(clearAlert());
+      }, 3000);
+    
+  });
+
 
   export const getUserById = createAsyncThunk(
     'user/updateUser',

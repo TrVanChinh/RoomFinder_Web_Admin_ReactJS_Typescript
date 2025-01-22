@@ -16,7 +16,6 @@ export  interface IAddress {
     viDo: number | null;
 }
 
-
 export  interface IRoom {
     maPhong: number;
     maNguoiDung: number;
@@ -28,10 +27,12 @@ export  interface IRoom {
     giaPhong: number;
     giaDien: number;
     giaNuoc: number;
-    dienTich: string;
+    dienTich: number;
     phongChungChu: boolean;
     gacXep: boolean;
     nhaBep: boolean;
+    nhaDeXe: boolean;
+    nhaVeSinh: string;
     soLuongPhongNgu: number;
     soTang: number;
     soNguoiToiDa: number;
@@ -81,12 +82,20 @@ export interface RoomInfo {
     giaPhong: number;
     giaDien: number;
     giaNuoc: number;
-    dienTich: string;
+    dienTich: number;
     phongChungChu: boolean;
     gacXep: boolean;
     nhaBep: boolean;
+    nhaDeXe: boolean;
+    nhaVeSinh: string;
     soLuongPhongNgu: number;
     soTang: number;
     soNguoiToiDa: number;
     trangThaiPhong: string;
+}
+
+export interface ReportRoomInfo {
+    room: RoomInfo;
+    userName: string;
+    reason: string;
 }

@@ -10,14 +10,14 @@ import swal from 'sweetalert'
 import moment from 'moment';
 import { loadRole } from '../../../store/role/thunks';
 import { IRole } from '../../../store/role/types';
-import { RoomInfo } from '../../../store/rooms/types';
-import { loadRoomsPagingByType, loadRoomsPaging } from '../../../store/rooms/thunks';
+import { IRoomType, RoomInfo } from '../../../store/rooms/types';
+import { loadRoomsPagingByType, loadRoomsPaging, deleteRoom } from '../../../store/rooms/thunks';
+import { roomService } from '../../../services/room.service';
 
 const User = () => {
     const rooms : RoomInfo[] =  useSelector((state: AppState) => state.room.items);
     const totalItems = useSelector((state: AppState) => state.room.total);
     const pageSize = useSelector((state: AppState) => state.room.pageSize);
-    const role: IRole[] = useSelector((state: AppState) => state.role.items)
 
     const [currentPage, setCurrentPage] = useState(1)
     const [searchKeyword, setSearchKeyword] = useState('')
@@ -25,21 +25,59 @@ const User = () => {
     const [selectedItems, setSelectedItems] = useState<number[]>([])
 
     const [selectedDropDownItems, setSelectedDropDownItems] = useState<string>("")
+    const [selectedDropDownItemsRoomStatus, setSelectedDropDownItemsRoomStatus] = useState<string>("")
+
     const [dropDownIndexItem, setDropDownIndexItem] = useState<number>(0)
+    const [dropDownIndexItemRoomStatus, setDropDownIndexItemRoomStatus] = useState<string>("Tất cả")
 
     const [isOpen, setIsOpen] = useState(false);
+    const [isOpenRoomStatus, setIsOpenRoomStatus] = useState(false);
 
+    const [roomType, setRoomType] = useState<IRoomType[]>([]);
+    
+    const [roomStatus] = useState([
+      { label: "Đã thuê", value: "Đã thuê" },
+      { label: "Cho thuê", value: "Cho thuê" },
+      { label: "Không duyệt", value: "Không duyệt" },
+      { label: "Chờ duyệt", value: "Chờ duyệt" },
+      { label: "Dừng cho thuê", value: "Dừng cho thuê" },
+    ]);
     const toggleDropdown = () => {
       setIsOpen(!isOpen);
     };
 
-    const dispatch = useDispatch<AppDispatch>();
-    useEffect(() => {
-        dispatch(loadRole())
-        dispatch(loadRoomsPaging({ keyword: '',  currentPage: 1 }))
-        // dispatch(loadRoomsPagingByType({ keyword: dropDownIndexItem, currentPage: currentPage } ))
-    },[dispatch, currentPage, searchKeyword, dropDownIndexItem])
+    const toggleDropdownRoomStatus = () => {
+      setIsOpenRoomStatus(!isOpenRoomStatus);
+    };
 
+    const dispatch = useDispatch<AppDispatch>();
+
+    const getRoomType = async() => {
+      const response = await roomService.getRoomType();
+      setRoomType(response);
+    }
+    
+    useEffect(() => {
+      getRoomType();
+    },[])
+
+    useEffect(() => {
+      const roomTypeId = dropDownIndexItem === 0 ? null : dropDownIndexItem;
+      const roomStatus = dropDownIndexItemRoomStatus === "Tất cả" ? null : dropDownIndexItemRoomStatus;
+      console.log('Room type', roomTypeId)
+
+      dispatch(loadRoomsPagingByType({
+        roomTypeId,
+        roomStatus,
+        currentPage
+      }));
+    
+    }, [dispatch, currentPage, dropDownIndexItem, dropDownIndexItemRoomStatus]);
+    
+
+    // useEffect(() => {
+    //     dispatch(loadRoomsPagingByType({ keyword: dropDownIndexItem, currentPage: currentPage } ))
+    // },[dispatch, dropDownIndexItem, dropDownIndexItemRoomStatus])
 
     const onPageChanged = (pageNumber: number) => {
         setCurrentPage(pageNumber);
@@ -69,38 +107,58 @@ const User = () => {
       setSelectedItems(newSelectedItems);
     };
 
-        const handleDelete = () => {
-          if (selectedItems) {
-            swal({
-              title: 'Xác nhận',
-              text: 'Bạn có muốn xoá các bản ghi này?',
-              icon: 'warning',
-              buttons: ['Huỷ', 'Xác nhận'],
-              dangerMode: true,
-            }).then((willDelete) => {
-              if (willDelete) {
-                dispatch(deleteUsers(selectedItems));
-                setSelectedItems([]);
-              }
-            });
-          }
-        };
+      const handleDelete = () => {
+        if (selectedItems) {
+          swal({
+            title: 'Xác nhận',
+            text: 'Bạn có muốn xoá các phòng này?',
+            icon: 'warning',
+            buttons: ['Huỷ', 'Xác nhận'],
+            dangerMode: true,
+          }).then((willDelete) => {
+            if (willDelete) {
+              const stringIds = selectedItems.map((id) => id.toString());
+              dispatch(deleteRoom(stringIds));
+              setSelectedItems([]);
+            }
+          });
+        }
+      };
 
-        const handleDropdownClick = (maLTK: number, vaiTro: string) => {
-          setSelectedDropDownItems(vaiTro);
-          setDropDownIndexItem(maLTK);
-          toggleDropdown();
-        };
+      const handleDropdownClick = (maLTK: number, vaiTro: string) => {
+        setSelectedDropDownItems(vaiTro);
+        setDropDownIndexItem(maLTK);
+        toggleDropdown();
+      };
 
-    const dropdownElements: JSX.Element[] = role.map((item) => (
+      const handleDropdownRoomStatusClick = (lable: string, value: string) => {
+        setSelectedDropDownItemsRoomStatus(lable);
+        setDropDownIndexItemRoomStatus(value);
+        toggleDropdownRoomStatus();
+      };
+
+
+    const dropdownElements: JSX.Element[] = roomType.map((item) => (
       <button
-        key={item.maLTK}
+        key={item.maLoaiPhong}
         className="dropdown-item"
         onClick={() => {
-          handleDropdownClick(Number(item.maLTK), item.vaiTro);
+          handleDropdownClick(Number(item.maLoaiPhong), item.loaiPhong);
         }}
       >
-        {item.vaiTro}
+        {item.loaiPhong}
+      </button>
+    ));
+
+    const dropdownRoomStatus: JSX.Element[] = roomStatus.map((item) => (
+      <button
+        key={item.value}
+        className="dropdown-item"
+        onClick={() => {
+          handleDropdownRoomStatusClick( item.label, item.value);
+        }}
+      >
+        {item.label}
       </button>
     ));
         
@@ -125,12 +183,12 @@ const User = () => {
                 <td>{room.tieuDe}</td>
                 <td>{room.loaiPhong.loaiPhong}</td>
                 <td>{room.dienTich}</td>
-                <td>{room.giaPhong}</td>
+                <td>{room.giaPhong.toLocaleString()}</td>
                 <td>{room.trangThaiPhong}</td>
                 {/* <td>{room. ? DateFormatted(user.ngayDangKy) : 'N/A'}</td> */}
                 <td>
-                  <Link to={UrlConstants.ROOM_EDIT + room.maPhong}>
-                    Sửa
+                  <Link to={UrlConstants.ROOM_DETAIL + room.maPhong}>
+                    Xem chi tiết
                   </Link>
                 </td>
             </tr>
@@ -172,7 +230,7 @@ const User = () => {
                     <button
                       type='button'
                       onClick={() =>
-                        dispatch(loadUsersPaging({ keyword: searchKeyword, currentPage }))
+                        dispatch(loadRoomsPaging({ keyword: searchKeyword, currentPage }))
                       }
                       className='btn btn-primary my-1'
                     >
@@ -208,13 +266,6 @@ const User = () => {
                     Tìm kiếm
                     </button>
 
-                    <Link
-                      to={UrlConstants.USER_ADD}
-                      className='btn btn-outline-success btn-sm'
-                    >
-                      <span className='fa fa-plus'></span> Thêm mới
-                    </Link>
-
                     {selectedItems.length > 0 && (
                     <Fragment>
                       <button
@@ -237,41 +288,79 @@ const User = () => {
 
                 <div className="card-body">
                     <div className="table-responsive">
-                      
-                      {/* Dropdown */}
-                      <div className="dropdown mb-2">
-                          {selectedDropDownItems === "" ? (
-                            <button
-                              onClick={toggleDropdown}
-                              className="btn btn-primary dropdown-toggle"
-                            >
-                              Loại phòng
-                            </button>
-                          ) : (
-                            <button
-                              onClick={toggleDropdown}
-                              className="btn btn-primary dropdown-toggle"
-                            >
-                              {selectedDropDownItems}
-                            </button>
-                          )}
 
-                          {isOpen && (
-                            <div className="dropdown-menu show">
-                               <button
-                                className="dropdown-item"
-                                onClick={() => {
-                                  toggleDropdown();
-                                  setDropDownIndexItem(0)
-                                  setSelectedDropDownItems("Tất cả")
-                                }}
+                        <div className="form-group d-flex align-items-center mb-2 gap-3">
+                          {/* Dropdown */}
+                          <div className="dropdown  ml-4">
+                            {selectedDropDownItems === "" ? (
+                              <button
+                                onClick={toggleDropdown}
+                                className="btn btn-primary dropdown-toggle"
                               >
-                                Tất cả
+                                Loại phòng
                               </button>
-                              {dropdownElements}
-                            </div>
-                          )}
+                            ) : (
+                              <button
+                                onClick={toggleDropdown}
+                                className="btn btn-primary dropdown-toggle"
+                              >
+                                {selectedDropDownItems}
+                              </button>
+                            )}
+
+                            {isOpen && (
+                              <div className="dropdown-menu show">
+                                <button
+                                  className="dropdown-item"
+                                  onClick={() => {
+                                    toggleDropdown();
+                                    setDropDownIndexItem(0);
+                                    setSelectedDropDownItems("Tất cả");
+                                  }}
+                                >
+                                  Tất cả
+                                </button>
+                                {dropdownElements}
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Dropdown Room Status */}
+                          <div className="dropdown  ml-4">
+                            {selectedDropDownItemsRoomStatus === "" ? (
+                              <button
+                                onClick={toggleDropdownRoomStatus}
+                                className="btn btn-primary dropdown-toggle"
+                              >
+                                Trang thái phòng
+                              </button>
+                            ) : (
+                              <button
+                                onClick={toggleDropdownRoomStatus}
+                                className="btn btn-primary dropdown-toggle"
+                              >
+                                {selectedDropDownItemsRoomStatus}
+                              </button>
+                            )}
+
+                            {isOpenRoomStatus && (
+                              <div className="dropdown-menu show">
+                                <button
+                                  className="dropdown-item"
+                                  onClick={() => {
+                                    toggleDropdownRoomStatus();
+                                    setDropDownIndexItemRoomStatus("Tất cả");
+                                    setSelectedDropDownItemsRoomStatus("Tất cả");
+                                  }}
+                                >
+                                  Tất cả
+                                </button>
+                                {dropdownRoomStatus}
+                              </div>
+                            )}
+                          </div>
                         </div>
+
                         <table className="table table-bordered" id="dataTable" width="100%" cellSpacing={0}>
                             <thead>
                                 <tr>

@@ -29,15 +29,36 @@ export const Login = () => {
         }
     };
 
+    // const handleSubmit = (e: FormEvent<HTMLFormElement>) => { 
+    //     e.preventDefault();
+    //     setSubmitted(true);
+    //     if (email && matKhau) { 
+    //         const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/';
+    //         dispatch(loginUser({ email, matKhau }))
+    //             .unwrap()
+    //             .then(() => {
+    //                 navigate(from);
+    //             })
+    //             .catch((err: any) => {
+    //                 console.error("Login failed:", err);
+    //                 if (err && typeof err === 'object' && 'status' in err) {
+    //                     console.error("Error status:", err.status); // Kiểm tra lỗi nếu có `status`
+    //                 } else {
+    //                     console.error("Unknown error format:", err); // Trường hợp lỗi không có `status`
+    //                 }
+    //             });
+    //     }
+    // }
+
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => { 
         e.preventDefault();
         setSubmitted(true);
         if (email && matKhau) { 
-            const from = (location.state as { from?: { pathname: string } })?.from?.pathname || '/';
+            // Luôn điều hướng đến /user sau khi đăng nhập thành công
             dispatch(loginUser({ email, matKhau }))
                 .unwrap()
                 .then(() => {
-                    navigate(from);
+                    navigate('/requires-account'); // Điều hướng cố định đến trang /user
                 })
                 .catch((err: any) => {
                     console.error("Login failed:", err);
@@ -48,7 +69,8 @@ export const Login = () => {
                     }
                 });
         }
-    }
+    };
+    
 
     return (
         <div className="container">
@@ -107,9 +129,9 @@ export const Login = () => {
                                            
                                         </form>
                                         <hr />
-                                        <div className="text-center">
+                                        {/* <div className="text-center">
                                             <a className="small" href="forgot-password.html">Quên mật khẩu?</a>
-                                        </div>
+                                        </div> */}
                                         
                                     </div>
                                 </div>

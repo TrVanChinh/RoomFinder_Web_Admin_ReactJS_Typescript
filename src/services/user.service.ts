@@ -69,11 +69,28 @@ const getUsersPaging = async (
     return res
 }
 
+const getRegisterRoomOwnerPaging = async (
+    currentPage: number,
+): Promise<IPagination<IUser>> => {
+    const res = await api 
+    .get<IPagination<IUser>>(`/v1/users/register/paging/${currentPage}`).then((response) => { 
+        return response.data
+    })
+    return res
+}
+
 const getUsersPagingByRole = async (
     keyword: number, currentPage: number,
 ): Promise<IPagination<IUser>> => {
     const res = await api 
     .get<IPagination<IUser>>(`/v1/users/role/paging/${currentPage}?keyword=${keyword}`).then((response) => { 
+        return response.data
+    })
+    return res
+}
+
+const getUserById = async ( id: string ): Promise<IUser> => { 
+    const res = await api.get<IUser>(`/v1/users/${id}`).then((response) => {
         return response.data
     })
     return res
@@ -93,8 +110,15 @@ const updateUser = async ( id: string, user: IUserUpdatebyAdminRequest): Promise
     return res
 }
 
-const getUserById = async ( id: string ): Promise<IUser> => { 
-    const res = await api.get<IUser>(`/v1/users/${id}`).then((response) => {
+const ApproveTheRoomOwner = async ( id: string): Promise<any> => { 
+    const res = await api.put(`/v1/users/account/roomOwner/approve/${id}`).then((response) =>{
+        return response.data
+    })
+    return res
+}
+
+const RejectTheRoomOwner = async ( id: string): Promise<any> => { 
+    const res = await api.put(`/v1/users/account/roomOwner/reject/${id}`).then((response) =>{
         return response.data
     })
     return res
@@ -113,9 +137,12 @@ export const userService = {
     getCurrentLoginUser,
     getUsersPaging,
     getUsersPagingByRole,
+    getRegisterRoomOwnerPaging,
     getRole,
     addUser,
     updateUser,
     getUserById,
+    ApproveTheRoomOwner,
+    RejectTheRoomOwner,
     deleteUser
 }

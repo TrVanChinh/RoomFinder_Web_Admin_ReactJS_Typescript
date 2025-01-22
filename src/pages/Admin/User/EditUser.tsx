@@ -454,12 +454,14 @@ const EditUser = () => {
     sdt: '',
     trangThaiTaiKhoan: '',
     trangThaiDangKy: '',
+    matTruocCCCD: '',
+    matSauCCCD: '',
     maLTK: 0,
   });
 
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  const { email, tenNguoiDung, matKhau, gioiTinh, ngaySinh, soCCCD, sdt, trangThaiTaiKhoan, trangThaiDangKy, maLTK } = formInputs;
+  const { email, tenNguoiDung, matKhau, gioiTinh, ngaySinh, soCCCD, sdt, matTruocCCCD, matSauCCCD, trangThaiTaiKhoan, trangThaiDangKy, maLTK } = formInputs;
 
   useEffect(() => {
     if (id) {
@@ -478,6 +480,8 @@ const EditUser = () => {
         ngaySinh: formattedNgaySinh,
         soCCCD: user.soCCCD || '',
         sdt: user.sdt || '',
+        matTruocCCCD: user.matTruocCCCD || '',
+        matSauCCCD: user.matSauCCCD || '',
         trangThaiTaiKhoan: user.trangThaiTaiKhoan || '',
         trangThaiDangKy: user.trangThaiDangKy || '',
         maLTK: user.maLTK || 0,

@@ -6,6 +6,7 @@ export const UrlConstants = {
     REQUIRES_ACCOUNT:'/requires-account/',
     DETAIL_ACCOUNT: '/detail-account/',
     ROOM:'/rooms',
+    ROOM_DETAIL:'/room-detail/',
     ROOM_REPORT: '/rooms/report/',
     ROOM_EDIT:'/room-edit/',
     LOGIN: 'login',
